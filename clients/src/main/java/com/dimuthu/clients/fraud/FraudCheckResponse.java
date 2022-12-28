@@ -1,4 +1,4 @@
-package com.dimuthu.fraud;
+package com.dimuthu.clients.fraud;
 
 public record FraudCheckResponse(Boolean isFraudster) {
 }
