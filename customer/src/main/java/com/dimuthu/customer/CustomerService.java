@@ -24,20 +24,20 @@ public class CustomerService {
         // todo: check is email is valid
         // todo: check if email not taken
         customerRepository.saveAndFlush(customer);
-        // todo: check if fraudster
-        FraudCheckResponse fruadCheckResponse = fraudClient.isFraudster(customer.getId());
-        if(fruadCheckResponse.isFraudster()){
+
+        FraudCheckResponse fraudCheckResponse = fraudClient.isFraudster(customer.getId());
+        if(fraudCheckResponse.isFraudster()){
             throw new IllegalStateException("fraudster");
         }
 
 //        todo: make it async. i.e. add to queue
-        notificationClient.sendNotification(
-                new NotificationRequest(
-                        customer.getId(),
-                        customer.getEmail(),
-                        String.format("Hi %s, Welcome to Dimuthu's World", customer.getFirstName())
-                )
+        NotificationRequest notificationRequest = new NotificationRequest(
+                customer.getId(),
+                customer.getEmail(),
+                String.format("Hi %s, Welcome to Dimuthu's World", customer.getFirstName())
         );
+
+        notificationClient.sendNotification(notificationRequest);
 
     }
 }
