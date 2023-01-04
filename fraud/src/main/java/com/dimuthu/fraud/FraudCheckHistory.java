@@ -23,10 +23,4 @@ public class FraudCheckHistory {
     private Boolean isFraudster;
     private LocalDateTime createdAt;
 
-    public static void main(String[] args) {
-        List<Integer> list = List.of(1, 2, 3);
-        list.stream()
-                .map(i -> i * 2)
-                .forEach(System.out::println);
-    }
 }
