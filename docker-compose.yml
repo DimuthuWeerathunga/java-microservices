@@ -45,7 +45,7 @@ services:
     image: dimuthuwa/eureka-server:latest
     container_name: eureka-server
     ports:
-      - "8671:8761"
+      - "8761:8761"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
