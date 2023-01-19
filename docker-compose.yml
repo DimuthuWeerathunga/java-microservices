@@ -34,13 +34,15 @@ services:
     ports:
       - "9411:9411"
     networks:
-      - spring
+      - internal
   rabbitmq:
     image: rabbitmq:3.9.11-management-alpine
     container_name: rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
+    networks:
+      - internal
   eureka-server:
     image: dimuthuwa/eureka-server:latest
     container_name: eureka-server
@@ -49,7 +51,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
-      - spring
+      - internal
     depends_on:
       - zipkin
   apigw:
@@ -60,15 +62,54 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
-      - spring
+      - internal
     depends_on:
       - zipkin
+      - eureka-server
+  customer:
+    image: dimuthuwa/customer:latest
+    container_name: customer
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - internal
+      - postgres
+    depends_on:
+      - zipkin
+      - postgres
+      - rabbitmq
+      - eureka-server
+  fraud:
+    image: dimuthuwa/fraud:latest
+    container_name: fraud
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - internal
+      - postgres
+    depends_on:
+      - zipkin
+      - postgres
+      - rabbitmq
+      - eureka-server
+  notification:
+    image: dimuthuwa/notification:latest
+    container_name: notification
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - internal
+      - postgres
+    depends_on:
+      - zipkin
+      - postgres
+      - rabbitmq
       - eureka-server
 
 networks:
   postgres:
     driver: bridge
-  spring:
+  internal:
     driver: bridge
 
 volumes:
